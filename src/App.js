@@ -194,7 +194,7 @@ class App extends Component {
             </Button>
 
             <a href={this.link} target="_black">
-              <QRCode value="http://facebook.github.io/react/" />,
+              <QRCode value={this.link} />,
             </a>
           </div>
         )}
