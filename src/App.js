@@ -4,6 +4,9 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
+import Grid from 'material-ui/Grid';
+import Paper from 'material-ui/Paper';
+import { CircularProgress } from 'material-ui/Progress';
 import Card, { CardContent } from 'material-ui/Card';
 import List, { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
@@ -15,7 +18,7 @@ import './App.css';
 
 const styles = {
   root: {
-    // flexGrow: 1,
+    flexGrow: 1,
   },
   appBar: {
     backgroundColor: '#ff5722',
@@ -28,6 +31,20 @@ const styles = {
     width: '100%',
     minHeight: '120px',
     display: 'block',
+  },
+  spinnerWrapper: {
+    marginTop: '40px',
+    textAlign: 'center',
+  },
+  spinner: {},
+  form: {
+    padding: '15px',
+  },
+  qrcodeWrapper: {
+    textAlign: 'right',
+  },
+  header: {
+    padding: '15px',
   },
 };
 
@@ -51,6 +68,7 @@ class App extends Component {
       added_file_contents: null,
       title: '',
       description: '',
+      isLoading: false,
       fetchedMenu: [],
       menu: [
         {
@@ -93,11 +111,12 @@ class App extends Component {
         this.add();
 
         if (this.isViewOnly) {
+          this.setState({ isLoading: true });
           axios
             .get(`https://ipfs.io/ipfs/${getSearchParam('menu')}`)
             .then(data => {
               console.log('da promessa: ', data);
-              this.setState({ fetchedMenu: data.data });
+              this.setState({ fetchedMenu: data.data, isLoading: false });
             });
         }
       });
@@ -176,28 +195,45 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         {this.isViewOnly ? null : (
-          <div>
-            <TextField
-              id="title"
-              label="Title"
-              onChange={this.handleTitleInput}
-              margin="normal"
-            />
-            <TextField
-              id="description"
-              label="Description"
-              onChange={this.handleDescriptionInput}
-              margin="normal"
-            />
-            <Button color="primary" onClick={this.handleSubmit}>
-              create
-            </Button>
+          <header className={classes.header}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Paper className={classes.form}>
+                  <TextField
+                    id="title"
+                    label="Title"
+                    onChange={this.handleTitleInput}
+                    margin="normal"
+                  />
+                  <br />
+                  <TextField
+                    id="description"
+                    label="Description"
+                    onChange={this.handleDescriptionInput}
+                    margin="normal"
+                  />
+                  <br />
 
-            <a href={this.link} target="_black">
-              <QRCode value={this.link} />,
-            </a>
-          </div>
+                  <Button color="primary" onClick={this.handleSubmit}>
+                    create
+                  </Button>
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
+                <div className={classes.qrcodeWrapper}>
+                  <a href={this.link} target="_black">
+                    <QRCode size={210} value={this.link} />,
+                  </a>
+                </div>
+              </Grid>
+            </Grid>
+          </header>
         )}
+        {this.state.isLoading ? (
+          <div className={classes.spinnerWrapper}>
+            <CircularProgress className={classes.spinner} color="secondary" />
+          </div>
+        ) : null}
 
         <List>
           {this.menu.map(item => (
