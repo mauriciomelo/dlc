@@ -158,7 +158,9 @@ class App extends Component {
   }
 
   get link() {
-    return `${window.location.origin}/?menu=${this.state.added_file_hash}`;
+    return `${window.location.origin}${window.location.pathname}?menu=${
+      this.state.added_file_hash
+    }`;
   }
 
   render() {
