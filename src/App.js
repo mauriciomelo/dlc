@@ -69,18 +69,7 @@ class App extends Component {
       description: '',
       isLoading: false,
       fetchedMenu: [],
-      menu: [
-        {
-          title: 'Carne de sol',
-          description:
-            'É servida acompanhada por arroz branco, feijão de corda (também conhecido com feijão verde), vinagrete (tomate, cebola e coentro cortados bem pequenos temperados com vinagre, azeite e sal), farofa de ovo ou de cebola e em alguns lugares de jerimum, queijo coalho frito, macaxeira cozida ou frita e a manteiga de garrafa',
-        },
-        {
-          title: 'Escondidinho de macaxeira',
-          description:
-            'O escondidinho é feito com um tipo de purê de macaxeira com requeijão',
-        },
-      ],
+      menu: [],
     };
   }
 
@@ -92,6 +81,7 @@ class App extends Component {
       this.setState({ fetchedMenu, isLoading: false });
     }
 
+    this.setState({ menu: await service.getLocalMenu() });
     this.add();
   }
 

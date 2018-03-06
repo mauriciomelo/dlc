@@ -1,4 +1,5 @@
 import axios from 'axios';
+import idb from 'idb-keyval';
 
 const node = new window.Ipfs({ repo: String(Math.random() + Date.now()) });
 window.node = node;
@@ -35,7 +36,25 @@ const get = async hash => {
   return data;
 };
 
+const getLocalMenu = async () => {
+  const demo = [
+    {
+      title: 'Carne de sol',
+      description:
+        'É servida acompanhada por arroz branco, feijão de corda (também conhecido com feijão verde), vinagrete (tomate, cebola e coentro cortados bem pequenos temperados com vinagre, azeite e sal), farofa de ovo ou de cebola e em alguns lugares de jerimum, queijo coalho frito, macaxeira cozida ou frita e a manteiga de garrafa',
+    },
+    {
+      title: 'Escondidinho de macaxeira',
+      description:
+        'O escondidinho é feito com um tipo de purê de macaxeira com requeijão',
+    },
+  ];
+  const menu = await idb.get('menu');
+  return menu ? menu : demo;
+};
+
 const add = async file => {
+  idb.set('menu', file);
   await waitForReady();
   const text = JSON.stringify(file);
   const filesAdded = await node.files.add([Buffer.from(text)]);
@@ -47,5 +66,5 @@ const add = async file => {
 export default {
   add,
   cat,
-  get,
+  getLocalMenu,
 };
