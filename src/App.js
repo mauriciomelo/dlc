@@ -11,9 +11,8 @@ import Card, { CardContent } from 'material-ui/Card';
 import List, { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
-import axios from 'axios';
 import QRCode from 'qrcode.react';
-
+import service from './dbService';
 import './App.css';
 
 const styles = {
@@ -85,46 +84,18 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    const create = () => {
-      // Create the IPFS node instance
+  async componentDidMount() {
+    if (this.isViewOnly) {
+      this.setState({ isLoading: true });
+      const fetchedMenu = await service.cat(getSearchParam('menu'));
+      console.log({ fetchedMenu });
+      this.setState({ fetchedMenu, isLoading: false });
+    }
 
-      this.node = new window.Ipfs({ repo: String(Math.random() + Date.now()) });
-
-      this.node.once('ready', () => {
-        console.log('IPFS node is ready');
-        ops();
-      });
-    };
-
-    const ops = () => {
-      this.node.id((err, res) => {
-        if (err) {
-          throw err;
-        }
-        this.setState({
-          id: res.id,
-          version: res.agentVersion,
-          protocol_version: res.protocolVersion,
-        });
-
-        this.add();
-
-        if (this.isViewOnly) {
-          this.setState({ isLoading: true });
-          axios
-            .get(`https://ipfs.io/ipfs/${getSearchParam('menu')}`)
-            .then(data => {
-              console.log('da promessa: ', data);
-              this.setState({ fetchedMenu: data.data, isLoading: false });
-            });
-        }
-      });
-    };
-    create();
+    this.add();
   }
 
-  add() {
+  async add() {
     const post = {
       title: this.state.title,
       description: this.state.description,
@@ -132,25 +103,10 @@ class App extends Component {
     const menu = [post].concat(this.state.menu).filter(p => p.title !== '');
 
     this.setState({ menu });
-    const text = JSON.stringify(menu);
-
-    console.log('added', text);
-
-    this.node.files.add([Buffer.from(text)], (err, filesAdded) => {
-      if (err) {
-        throw err;
-      }
-
-      const hash = filesAdded[0].hash;
-      this.setState({ added_file_hash: hash });
-      console.log({ hash });
-      this.node.files.cat(hash, (err, data) => {
-        if (err) {
-          throw err;
-        }
-        this.setState({ added_file_contents: data });
-      });
-    });
+    const filesAdded = await service.add(menu);
+    const hash = filesAdded[0].hash;
+    this.setState({ added_file_hash: hash });
+    console.log({ hash });
   }
 
   get isViewOnly() {
