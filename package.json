@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "https://mauriciomelo.github.io/dlc",
   "dependencies": {
-    "axios": "^0.18.0",
     "idb-keyval": "^2.3.0",
+    "ipfs-pubsub-room": "^1.1.5",
     "qrcode.react": "^0.8.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

@@ -1,12 +1,43 @@
-import axios from 'axios';
 import idb from 'idb-keyval';
+import Room from 'ipfs-pubsub-room';
+const node = new window.Ipfs({
+  repo: String(Math.random() + Date.now()),
+  EXPERIMENTAL: {
+    pubsub: true,
+  },
+  config: {
+    Addresses: {
+      Swarm: [
+        '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star',
+      ],
+    },
+  },
+});
 
-const node = new window.Ipfs({ repo: String(Math.random() + Date.now()) });
 window.node = node;
 let isReady = false;
 
 node.once('ready', () => {
   isReady = true;
+
+  const room = Room(node, 'dlc-room');
+  window.room = room; // play with it on console
+
+  room.on('peer joined', peer => {
+    console.log('Peer joined the room', peer);
+  });
+
+  room.on('peer left', peer => {
+    console.log('Peer left...', peer);
+  });
+
+  room.on('subscribed', () => {
+    console.log('Now connected!');
+  });
+
+  room.on('message', message => {
+    console.log(`from: ${message.from} | ${message.data.toString()}`);
+  });
 });
 
 const waitForReady = () => {
@@ -31,11 +62,6 @@ const cat = async hash => {
   return JSON.parse(data.toString('utf8'));
 };
 
-const get = async hash => {
-  const { data } = await axios.get(`https://ipfs.io/ipfs/${hash}`);
-  return data;
-};
-
 const getLocalMenu = async () => {
   const demo = [
     {
@@ -58,8 +84,6 @@ const add = async file => {
   await waitForReady();
   const text = JSON.stringify(file);
   const filesAdded = await node.files.add([Buffer.from(text)]);
-  const hash = filesAdded[0].hash;
-  get(hash); // workaround to propagate the file to the gateways, aparently js-ipfs is having a bad time to do it by itself
   return filesAdded;
 };
 
