@@ -7,8 +7,10 @@
     "idb-keyval": "^2.3.0",
     "ipfs-pubsub-room": "^1.1.5",
     "qrcode.react": "^0.8.0",
+    "query-string": "^5.1.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1"
   },
   "scripts": {
