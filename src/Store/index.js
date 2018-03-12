@@ -7,6 +7,7 @@ import { withStyles } from 'material-ui/styles';
 import service from '../dbService';
 import Menu from '../Menu';
 import queryString from 'query-string';
+import Cart from './Cart';
 
 const styles = {
   root: {
@@ -24,18 +25,20 @@ class Admin extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      menu: [],
+      store: {
+        menu: [],
+      },
     };
   }
 
-  get menuHash() {
-    return queryString.parseUrl(window.location.href).query.menu;
+  get hash() {
+    return queryString.parseUrl(window.location.href).query.hash;
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-    const menu = await service.cat(this.menuHash);
-    this.setState({ menu, isLoading: false });
+    const store = await service.cat(this.hash);
+    this.setState({ store, isLoading: false });
   }
 
   render() {
@@ -54,7 +57,9 @@ class Admin extends Component {
             <CircularProgress className={classes.spinner} color="secondary" />
           </div>
         ) : null}
-        <Menu menu={this.state.menu} />
+        <Menu menu={this.state.store.menu} />
+
+        <Cart />
       </div>
     );
   }

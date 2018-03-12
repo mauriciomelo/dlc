@@ -1,4 +1,8 @@
 import idb from 'idb-keyval';
+import Room from 'ipfs-pubsub-room';
+import { Subject } from 'rxjs/Subject';
+import NodeRSA from 'node-rsa';
+
 const node = new window.Ipfs({
   repo: String(Math.random() + Date.now()),
   EXPERIMENTAL: {
@@ -13,12 +17,71 @@ const node = new window.Ipfs({
   },
 });
 
+let room;
 window.node = node;
+
 let isReady = false;
 
 node.once('ready', () => {
+  room = Room(node, 'dlc-test-room');
+  window.room = room;
   isReady = true;
+
+  room.on('peer joined', peer => {
+    console.log('Peer joined the room', peer);
+  });
+
+  room.on('peer left', peer => {
+    console.log('Peer left...', peer);
+  });
+
+  // now started to listen to room
+  room.on('subscribed', () => {
+    console.log('Now connected!');
+  });
+
+  room.on('message', message => {
+    const msg = message.data.toString();
+    console.log('new message: ', msg);
+    if (msg === 'buy-request') {
+      clientRequest.next(msg);
+    }
+  });
 });
+
+const createInitialStore = async () => {
+  if (!await idb.get('store')) {
+    const key = new NodeRSA({ b: 2048 });
+    await idb.set('private-key', key.exportKey('private').toString());
+
+    const demoStore = {
+      name: 'Demo Store',
+      publicKey: key.exportKey('public').toString(),
+      menu: [
+        {
+          title: 'Carne de sol',
+          description:
+            'É servida acompanhada por arroz branco, feijão de corda (também conhecido com feijão verde), vinagrete (tomate, cebola e coentro cortados bem pequenos temperados com vinagre, azeite e sal), farofa de ovo ou de cebola e em alguns lugares de jerimum, queijo coalho frito, macaxeira cozida ou frita e a manteiga de garrafa',
+        },
+        {
+          title: 'Escondidinho de macaxeira',
+          description:
+            'O escondidinho é feito com um tipo de purê de macaxeira com requeijão',
+        },
+      ],
+    };
+
+    await idb.set('store', demoStore);
+  }
+};
+
+createInitialStore();
+
+const clientRequest = new Subject();
+
+const requestToBuy = () => {
+  room.broadcast('buy-request');
+};
 
 const waitForReady = () => {
   return new Promise((res, rej) => {
@@ -43,24 +106,14 @@ const cat = async hash => {
 };
 
 const getLocalMenu = async () => {
-  const demo = [
-    {
-      title: 'Carne de sol',
-      description:
-        'É servida acompanhada por arroz branco, feijão de corda (também conhecido com feijão verde), vinagrete (tomate, cebola e coentro cortados bem pequenos temperados com vinagre, azeite e sal), farofa de ovo ou de cebola e em alguns lugares de jerimum, queijo coalho frito, macaxeira cozida ou frita e a manteiga de garrafa',
-    },
-    {
-      title: 'Escondidinho de macaxeira',
-      description:
-        'O escondidinho é feito com um tipo de purê de macaxeira com requeijão',
-    },
-  ];
-  const menu = await idb.get('menu');
-  return menu ? menu : demo;
+  await createInitialStore();
+  const store = await idb.get('store');
+  console.log('local store is', store);
+  return store;
 };
 
 const add = async file => {
-  idb.set('menu', file);
+  idb.set('store', file);
   await waitForReady();
   const text = JSON.stringify(file);
   const filesAdded = await node.files.add([Buffer.from(text)]);
@@ -70,5 +123,7 @@ const add = async file => {
 export default {
   add,
   cat,
+  clientRequest,
+  requestToBuy,
   getLocalMenu,
 };

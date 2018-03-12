@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
 import QRCode from 'qrcode.react';
-import { Link } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -27,7 +26,9 @@ const styles = {
 class Admin extends Component {
   state = {
     hash: '',
-    menu: [],
+    store: {
+      menu: [],
+    },
   };
 
   constructor(props) {
@@ -36,15 +37,21 @@ class Admin extends Component {
   }
 
   async componentDidMount() {
-    const menu = await service.getLocalMenu();
-    console.log({ menu });
-    this.setState({ menu });
-    this.addMenu(menu);
+    const store = await service.getLocalMenu();
+    console.log({ store });
+    this.setState({ store });
+    this.addMenu(store);
+
+    service.clientRequest.subscribe(msg => {
+      if (msg === 'buy-request') {
+        alert('Someone wants to buy!');
+      }
+    });
   }
 
-  async addMenu(menu) {
-    this.setState({ menu });
-    const filesAdded = await service.add(menu);
+  async addMenu(store) {
+    this.setState({ store });
+    const filesAdded = await service.add(store);
     const hash = filesAdded[0].hash;
     this.setState({ hash: hash });
     console.log({ hash });
@@ -59,12 +66,14 @@ class Admin extends Component {
   };
 
   handleSubmit(item) {
-    const menu = [item].concat(this.state.menu).filter(p => p.title);
-    this.addMenu(menu);
+    const menu = [item].concat(this.state.store.menu).filter(p => p.title);
+    this.addMenu({ ...this.state.store, ...{ menu } });
   }
 
   get link() {
-    return `store?menu=${this.state.hash}`;
+    return `${window.location.origin}${window.location.pathname}#/store?hash=${
+      this.state.hash
+    }`;
   }
 
   render() {
@@ -106,25 +115,25 @@ class Admin extends Component {
                 onClose={this.handleClose}
               >
                 <MenuItem onClick={this.handleClose}>
-                  <Link
+                  <a
                     style={{ textDecoration: 'none', color: 'inherit' }}
-                    to={this.link}
+                    href={this.link}
                     target="_black"
                   >
                     View public catalog
-                  </Link>
+                  </a>
                 </MenuItem>
                 <MenuItem style={{ height: 'auto' }} onClick={this.handleClose}>
-                  <Link to={this.link} target="_black">
+                  <a href={this.link} target="_black">
                     <QRCode size={210} value={this.link} />,
-                  </Link>
+                  </a>
                 </MenuItem>
               </Menu>
             </div>
           </Toolbar>
         </AppBar>
         <ItemForm onCreate={this.handleSubmit} />
-        <StoreMenu menu={this.state.menu} />
+        <StoreMenu menu={this.state.store.menu} />
       </div>
     );
   }
