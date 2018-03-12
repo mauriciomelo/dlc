@@ -9,7 +9,6 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
 import ShoppingCartIcon from 'material-ui-icons/ShoppingCart';
-import service from '../dbService';
 
 const styles = {
   addButton: {
@@ -25,7 +24,7 @@ class ResponsiveDialog extends React.Component {
   };
 
   handleRequest = () => {
-    service.requestToBuy();
+    this.props.onResquest();
   };
 
   handleClickOpen = () => {

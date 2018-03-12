@@ -35,16 +35,19 @@ node.once('ready', () => {
     console.log('Peer left...', peer);
   });
 
-  // now started to listen to room
   room.on('subscribed', () => {
     console.log('Now connected!');
   });
 
-  room.on('message', message => {
-    const msg = message.data.toString();
-    console.log('new message: ', msg);
-    if (msg === 'buy-request') {
-      clientRequest.next(msg);
+  room.on('message', async message => {
+    const key = new NodeRSA(await idb.get('private-key'));
+    try {
+      const decryptedMessage = key.decrypt(message.data).toString();
+      if (decryptedMessage === 'buy-request') {
+        clientRequest.next(decryptedMessage);
+      }
+    } catch (e) {
+      console.log('Invalid message', e);
     }
   });
 });
@@ -79,8 +82,10 @@ createInitialStore();
 
 const clientRequest = new Subject();
 
-const requestToBuy = () => {
-  room.broadcast('buy-request');
+const requestToBuy = publicKey => {
+  const storeKey = new NodeRSA(publicKey);
+  const message = storeKey.encrypt('buy-request');
+  room.broadcast(message);
 };
 
 const waitForReady = () => {

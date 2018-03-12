@@ -31,6 +31,10 @@ class Admin extends Component {
     };
   }
 
+  handleRequest = () => {
+    service.requestToBuy(this.state.store.publicKey);
+  };
+
   get hash() {
     return queryString.parseUrl(window.location.href).query.hash;
   }
@@ -59,7 +63,7 @@ class Admin extends Component {
         ) : null}
         <Menu menu={this.state.store.menu} />
 
-        <Cart />
+        <Cart onResquest={this.handleRequest} />
       </div>
     );
   }
