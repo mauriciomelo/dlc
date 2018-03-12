@@ -11,10 +11,6 @@ const styles = {
   root: {
     flexGrow: 1,
   },
-  appBar: {
-    backgroundColor: '#ff5722',
-    color: 'white',
-  },
 };
 
 class App extends Component {
@@ -23,8 +19,8 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <Reboot />
-        <AppBar position="static" color="default">
-          <Toolbar className={classes.appBar}>
+        <AppBar position="static" color="secondary">
+          <Toolbar>
             <Typography variant="title" color="inherit">
               dlç
             </Typography>

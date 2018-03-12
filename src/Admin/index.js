@@ -7,27 +7,11 @@ import { withStyles } from 'material-ui/styles';
 import QRCode from 'qrcode.react';
 import { Link } from 'react-router-dom';
 import service from '../dbService';
+import ItemForm from './ItemForm';
 import Menu from '../Menu';
 
 const styles = {
-  root: {
-    flexGrow: 1,
-  },
-  appBar: {
-    backgroundColor: '#ff5722',
-    color: 'white',
-  },
-  listItem: {
-    width: '100%',
-  },
-  spinnerWrapper: {
-    marginTop: '40px',
-    textAlign: 'center',
-  },
-  spinner: {},
-  form: {
-    padding: '15px',
-  },
+  root: {},
   qrcodeWrapper: {
     textAlign: 'right',
   },
@@ -37,33 +21,24 @@ const styles = {
 };
 
 class Admin extends Component {
+  state = {
+    hash: '',
+    menu: [],
+  };
+
   constructor(props) {
     super(props);
-    this.handleTitleInput = this.handleTitleInput.bind(this);
-    this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.state = {
-      id: null,
-      title: '',
-      description: '',
-      hash: '',
-      menu: [],
-    };
   }
 
   async componentDidMount() {
-    this.setState({ menu: await service.getLocalMenu() });
-    this.add();
+    const menu = await service.getLocalMenu();
+    console.log({ menu });
+    this.setState({ menu });
+    this.addMenu(menu);
   }
 
-  async add() {
-    const post = {
-      title: this.state.title,
-      description: this.state.description,
-    };
-    const menu = [post].concat(this.state.menu).filter(p => p.title !== '');
-
+  async addMenu(menu) {
     this.setState({ menu });
     const filesAdded = await service.add(menu);
     const hash = filesAdded[0].hash;
@@ -71,18 +46,9 @@ class Admin extends Component {
     console.log({ hash });
   }
 
-  handleTitleInput(event) {
-    const title = event.target.value;
-    this.setState({ title });
-  }
-
-  handleDescriptionInput(event) {
-    const description = event.target.value;
-    this.setState({ description });
-  }
-
-  handleSubmit() {
-    this.add(this.state.menu);
+  handleSubmit(item) {
+    const menu = [item].concat(this.state.menu).filter(p => p.title);
+    this.addMenu(menu);
   }
 
   get link() {
@@ -94,38 +60,13 @@ class Admin extends Component {
     return (
       <div className={classes.root}>
         <header className={classes.header}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Paper className={classes.form}>
-                <TextField
-                  id="title"
-                  label="Title"
-                  onChange={this.handleTitleInput}
-                  margin="normal"
-                />
-                <br />
-                <TextField
-                  id="description"
-                  label="Description"
-                  onChange={this.handleDescriptionInput}
-                  margin="normal"
-                />
-                <br />
-
-                <Button color="primary" onClick={this.handleSubmit}>
-                  create
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <div className={classes.qrcodeWrapper}>
-                <Link to={this.link} target="_black">
-                  <QRCode size={210} value={this.link} />,
-                </Link>
-              </div>
-            </Grid>
-          </Grid>
+          <div className={classes.qrcodeWrapper}>
+            <Link to={this.link} target="_black">
+              <QRCode size={210} value={this.link} />,
+            </Link>
+          </div>
         </header>
+        <ItemForm onCreate={this.handleSubmit} />
         <Menu menu={this.state.menu} />
       </div>
     );
