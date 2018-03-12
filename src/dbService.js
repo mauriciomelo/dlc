@@ -1,5 +1,4 @@
 import idb from 'idb-keyval';
-import Room from 'ipfs-pubsub-room';
 const node = new window.Ipfs({
   repo: String(Math.random() + Date.now()),
   EXPERIMENTAL: {
@@ -19,25 +18,6 @@ let isReady = false;
 
 node.once('ready', () => {
   isReady = true;
-
-  const room = Room(node, 'dlc-room');
-  window.room = room; // play with it on console
-
-  room.on('peer joined', peer => {
-    console.log('Peer joined the room', peer);
-  });
-
-  room.on('peer left', peer => {
-    console.log('Peer left...', peer);
-  });
-
-  room.on('subscribed', () => {
-    console.log('Now connected!');
-  });
-
-  room.on('message', message => {
-    console.log(`from: ${message.from} | ${message.data.toString()}`);
-  });
 });
 
 const waitForReady = () => {
