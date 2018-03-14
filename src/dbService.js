@@ -47,7 +47,7 @@ node.once('ready', () => {
         clientRequest.next(decryptedMessage);
       }
     } catch (e) {
-      console.log('Invalid message', e);
+      console.info('Ignored message');
     }
   });
 });
@@ -113,7 +113,6 @@ const cat = async hash => {
 const getLocalMenu = async () => {
   await createInitialStore();
   const store = await idb.get('store');
-  console.log('local store is', store);
   return store;
 };
 

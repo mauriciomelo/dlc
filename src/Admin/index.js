@@ -38,7 +38,6 @@ class Admin extends Component {
 
   async componentDidMount() {
     const store = await service.getLocalMenu();
-    console.log({ store });
     this.setState({ store });
     this.addMenu(store);
 
@@ -54,7 +53,6 @@ class Admin extends Component {
     const filesAdded = await service.add(store);
     const hash = filesAdded[0].hash;
     this.setState({ hash: hash });
-    console.log({ hash });
   }
 
   handleMenu = event => {
