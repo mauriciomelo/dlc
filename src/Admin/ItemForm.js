@@ -22,33 +22,16 @@ const styles = {
 class ResponsiveDialog extends React.Component {
   state = {
     open: false,
-    title: '',
-    description: '',
+    item: {},
   };
 
   constructor() {
     super();
-    this.handleTitleInput = this.handleTitleInput.bind(this);
-    this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
   }
 
-  handleTitleInput(event) {
-    const title = event.target.value;
-    this.setState({ title });
-  }
-
-  handleDescriptionInput(event) {
-    const description = event.target.value;
-    this.setState({ description });
-  }
-
   handleCreate() {
-    this.props.onCreate({
-      title: this.state.title,
-      description: this.state.description,
-    });
-
+    this.props.onCreate(this.state.item);
     this.handleClose();
   }
 
@@ -58,6 +41,11 @@ class ResponsiveDialog extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleChange = name => event => {
+    const item = { ...this.state.item, ...{ [name]: event.target.value } };
+    this.setState({ item });
   };
 
   render() {
@@ -85,16 +73,22 @@ class ResponsiveDialog extends React.Component {
             <TextField
               id="title"
               label="Title"
-              onChange={this.handleTitleInput}
+              onChange={this.handleChange('title')}
               margin="normal"
             />
             <TextField
               id="description"
               label="Description"
-              onChange={this.handleDescriptionInput}
+              onChange={this.handleChange('description')}
               margin="normal"
             />
-            <br />
+            <TextField
+              className={classes.formControl}
+              label="Price"
+              onChange={this.handleChange('price')}
+              type="number"
+              id="price"
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
