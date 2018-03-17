@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import NodeRSA from 'node-rsa';
 
 const node = new window.Ipfs({
-  repo: String(Math.random() + Date.now()),
   EXPERIMENTAL: {
     pubsub: true,
   },
