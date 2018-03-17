@@ -29,7 +29,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^4.19.0",
+    "eslint": "4.15.0",
     "eslint-plugin-babel": "^4.1.2",
     "eslint-plugin-react": "^7.7.0",
     "gh-pages": "^1.1.0",
@@ -41,6 +41,11 @@
       "last 2 firefox versions",
       "last 2 edge versions"
     ],
-    "production": [">1%", "last 4 versions", "Firefox ESR", "not ie < 11"]
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
   }
 }
