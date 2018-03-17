@@ -18,13 +18,14 @@ const styles = {
     zIndex: 10,
   },
 };
-class ResponsiveDialog extends React.Component {
+
+class Cart extends React.Component {
   state = {
     open: false,
   };
 
   handleRequest = () => {
-    this.props.onResquest();
+    this.props.onRequest();
   };
 
   handleClickOpen = () => {
@@ -75,8 +76,10 @@ class ResponsiveDialog extends React.Component {
   }
 }
 
-ResponsiveDialog.propTypes = {
+Cart.propTypes = {
   fullScreen: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
+  onRequest: PropTypes.func.isRequired,
 };
 
-export default withMobileDialog()(withStyles(styles)(ResponsiveDialog));
+export default withMobileDialog()(withStyles(styles)(Cart));

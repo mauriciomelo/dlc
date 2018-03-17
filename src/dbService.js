@@ -28,15 +28,15 @@ node.once('ready', () => {
   isReady = true;
 
   room.on('peer joined', peer => {
-    console.log('Peer joined the room', peer);
+    console.log('Peer joined the room', peer); // eslint-disable-line no-console
   });
 
   room.on('peer left', peer => {
-    console.log('Peer left...', peer);
+    console.log('Peer left...', peer); // eslint-disable-line no-console
   });
 
   room.on('subscribed', () => {
-    console.log('Now connected!');
+    console.log('Now connected!'); // eslint-disable-line no-console
   });
 
   room.on('message', async message => {
@@ -47,7 +47,7 @@ node.once('ready', () => {
         clientRequest.next(decryptedMessage);
       }
     } catch (e) {
-      console.info('Ignored message');
+      console.info('Ignored message'); // eslint-disable-line no-console
     }
   });
 });
@@ -91,7 +91,7 @@ const requestToBuy = publicKey => {
 };
 
 const waitForReady = () => {
-  return new Promise((res, rej) => {
+  return new Promise(res => {
     const check = () => {
       setTimeout(() => {
         if (isReady) {

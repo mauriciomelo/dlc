@@ -19,7 +19,7 @@ const styles = {
     zIndex: 10,
   },
 };
-class ResponsiveDialog extends React.Component {
+class ItemForm extends React.Component {
   state = {
     open: false,
     item: {},
@@ -108,8 +108,10 @@ class ResponsiveDialog extends React.Component {
   }
 }
 
-ResponsiveDialog.propTypes = {
+ItemForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onCreate: PropTypes.func.isRequired,
   fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withMobileDialog()(withStyles(styles)(ResponsiveDialog));
+export default withMobileDialog()(withStyles(styles)(ItemForm));

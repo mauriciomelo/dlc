@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import QRCode from 'qrcode.react';
 import AppBar from 'material-ui/AppBar';
@@ -137,4 +138,7 @@ class Admin extends Component {
   }
 }
 
+Admin.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 export default withStyles(styles)(Admin);

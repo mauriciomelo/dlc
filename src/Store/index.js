@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -20,7 +21,7 @@ const styles = {
   spinner: {},
 };
 
-class Admin extends Component {
+class Store extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,10 +64,14 @@ class Admin extends Component {
         ) : null}
         <Menu menu={this.state.store.menu} />
 
-        <Cart onResquest={this.handleRequest} />
+        <Cart onRequest={this.handleRequest} />
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Admin);
+Store.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Store);

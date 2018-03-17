@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import {HashRouter, Switch, Route} from 'react-router-dom';
 import Store from './Store';
 import Admin from './Admin';
 

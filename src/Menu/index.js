@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Card, { CardContent } from 'material-ui/Card';
 import List, { ListItem } from 'material-ui/List';
 import Grid from 'material-ui/Grid';
@@ -48,5 +49,16 @@ export const Menu = props => (
     </List>
   </div>
 );
+
+Menu.propTypes = {
+  classes: PropTypes.object.isRequired,
+  menu: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      price: PropTypes.number,
+      description: PropTypes.string,
+    })
+  ),
+};
 
 export default withStyles(styles)(Menu);
