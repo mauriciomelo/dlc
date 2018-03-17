@@ -44,7 +44,9 @@ class ItemForm extends React.Component {
   };
 
   handleChange = name => event => {
-    const item = { ...this.state.item, ...{ [name]: event.target.value } };
+    const value =
+      name === 'price' ? Number(event.target.value) : event.target.value;
+    const item = { ...this.state.item, ...{ [name]: value } };
     this.setState({ item });
   };
 
