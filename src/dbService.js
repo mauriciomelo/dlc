@@ -61,12 +61,14 @@ const createInitialStore = async () => {
       publicKey: key.exportKey('public').toString(),
       menu: [
         {
+          id: '9bb2555f-22d2-45bc-8b1d-96f864c41e49',
           title: 'Carne de sol',
           price: 42.0,
           description:
             'É servida acompanhada por arroz branco, feijão de corda (também conhecido com feijão verde), vinagrete (tomate, cebola e coentro cortados bem pequenos temperados com vinagre, azeite e sal), farofa de ovo ou de cebola e em alguns lugares de jerimum, queijo coalho frito, macaxeira cozida ou frita e a manteiga de garrafa',
         },
         {
+          id: '74516732-10cb-452b-8c5e-35823456573b',
           title: 'Escondidinho de macaxeira',
           price: 14.5,
           description:

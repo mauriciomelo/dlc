@@ -10,6 +10,7 @@ import Dialog, {
 import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import AddIcon from 'material-ui-icons/Add';
+import uuid from 'uuid/v4';
 
 const styles = {
   addButton: {
@@ -31,7 +32,7 @@ class ItemForm extends React.Component {
   }
 
   handleCreate() {
-    this.props.onCreate(this.state.item);
+    this.props.onCreate({ ...this.state.item, ...{ id: uuid() } });
     this.handleClose();
   }
 

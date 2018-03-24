@@ -1,19 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
+import { Switch, Route } from 'react-router-dom';
 import { CircularProgress } from 'material-ui/Progress';
-import { withStyles } from 'material-ui/styles';
+import ProductList from './ProductList';
+import ProductView from './ProductView';
 import service from '../dbService';
-import Menu from '../Menu';
-import queryString from 'query-string';
-import Cart from './Cart';
+import { withStyles } from 'material-ui/styles';
 
 const styles = {
-  root: {
-    flexGrow: 1,
-  },
   spinnerWrapper: {
     marginTop: '40px',
     textAlign: 'center',
@@ -21,56 +15,51 @@ const styles = {
   spinner: {},
 };
 
-class Store extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      store: {
-        menu: [],
-      },
-    };
-  }
-
-  handleRequest = () => {
-    service.requestToBuy(this.state.store.publicKey);
+class Store extends React.Component {
+  state = {
+    isLoading: false,
+    store: {
+      menu: [],
+    },
   };
-
-  get hash() {
-    return queryString.parseUrl(window.location.href).query.hash;
-  }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-    const store = await service.cat(this.hash);
+    const store = await service.cat(this.props.match.params.hash);
     this.setState({ store, isLoading: false });
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color="secondary">
-          <Toolbar>
-            <Typography variant="title" color="inherit">
-              dlç
-            </Typography>
-          </Toolbar>
-        </AppBar>
+      <div>
+        <Switch>
+          <Route
+            exact
+            path={`${this.props.match.url}/`}
+            render={props => (
+              <ProductList store={this.state.store} {...props} />
+            )}
+          />
+          <Route
+            path={`${this.props.match.url}/product/:productId`}
+            render={props => (
+              <ProductView store={this.state.store} {...props} />
+            )}
+          />
+        </Switch>
         {this.state.isLoading ? (
           <div className={classes.spinnerWrapper}>
             <CircularProgress className={classes.spinner} color="secondary" />
           </div>
         ) : null}
-        <Menu menu={this.state.store.menu} />
-
-        <Cart onRequest={this.handleRequest} />
       </div>
     );
   }
 }
 
 Store.propTypes = {
+  match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

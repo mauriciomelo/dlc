@@ -70,7 +70,7 @@ class Admin extends Component {
   }
 
   get link() {
-    return `${window.location.origin}${window.location.pathname}#/store?hash=${
+    return `${window.location.origin}${window.location.pathname}#/store/${
       this.state.hash
     }`;
   }
