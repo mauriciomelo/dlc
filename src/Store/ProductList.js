@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
-import service from '../dbService';
 import Menu from '../Menu';
-import Cart from './Cart';
+import ShoppingCartIcon from 'material-ui-icons/ShoppingCart';
+import Button from 'material-ui/Button';
 import StoreAppBar from './StoreAppBar';
 const styles = {
   root: {
     flexGrow: 1,
   },
+  addButton: {
+    position: 'fixed',
+    bottom: '40px',
+    right: '40px',
+    zIndex: 10,
+  },
 };
 
 class ProductList extends Component {
-  handleRequest = () => {
-    service.requestToBuy(this.props.store.publicKey);
-  };
-
   render() {
     const { classes } = this.props;
     return (
@@ -25,8 +28,16 @@ class ProductList extends Component {
           menu={this.props.store.menu}
           linkTo={id => `${this.props.match.url}/product/${id}`}
         />
-
-        <Cart onRequest={this.handleRequest} />
+        <Button
+          variant="fab"
+          color="primary"
+          aria-label="add"
+          className={classes.addButton}
+          component={Link}
+          to={`${this.props.match.url}/cart`}
+        >
+          <ShoppingCartIcon />
+        </Button>{' '}
       </div>
     );
   }

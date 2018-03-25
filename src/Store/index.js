@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import { CircularProgress } from 'material-ui/Progress';
 import ProductList from './ProductList';
 import ProductView from './ProductView';
+import Cart from './Cart';
 import service from '../dbService';
 import { withStyles } from 'material-ui/styles';
 
@@ -46,6 +47,10 @@ class Store extends React.Component {
             render={props => (
               <ProductView store={this.state.store} {...props} />
             )}
+          />
+          <Route
+            path={`${this.props.match.url}/cart`}
+            render={props => <Cart store={this.state.store} {...props} />}
           />
         </Switch>
         {this.state.isLoading ? (

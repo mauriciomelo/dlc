@@ -9,6 +9,7 @@ import path from 'path';
 import StoreAppBar from './StoreAppBar';
 import QuantityInput from './QuantityInput';
 import Divider from 'material-ui/Divider';
+import PageActions from './PageActions';
 
 const styles = {
   root: {
@@ -33,21 +34,17 @@ const styles = {
     marginTop: '1em',
     fontSize: '1.5em',
   },
-  actions: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    padding: '20px',
-    width: '100%',
-    textAlign: 'right',
-  },
 };
 
 class ProductView extends Component {
   state = { redirect: false, quantity: 1 };
 
   addProduct = async () => {
-    await cart.add({ ...this.product, ...{ quantity: this.state.quantity } });
+    const cartItem = {
+      product: this.product,
+      quantity: this.state.quantity,
+    };
+    await cart.add(cartItem);
     this.close();
   };
 
@@ -97,14 +94,14 @@ class ProductView extends Component {
           <Typography className={classes.totalPrice}>
             Total: ${this.total}
           </Typography>
-          <div className={classes.actions}>
+          <PageActions>
             <Button onClick={this.close} color="primary">
               Cancel
             </Button>
             <Button onClick={this.addProduct} variant="raised" color="primary">
               Add to cart
             </Button>
-          </div>
+          </PageActions>
         </div>
       </div>
     );
@@ -114,7 +111,6 @@ class ProductView extends Component {
 ProductView.propTypes = {
   classes: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
 };
 

@@ -1,8 +1,10 @@
 import idb from 'idb-keyval';
+import uuid from 'uuid/v4';
 
 const add = async product => {
   const previous = await all();
-  return await idb.set('cart', [product].concat(previous));
+  const productWithId = { ...product, ...{ id: uuid() } };
+  return await idb.set('cart', [productWithId].concat(previous));
 };
 
 const all = async () => {

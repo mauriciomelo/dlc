@@ -15,7 +15,7 @@ const StoreAppBar = ({ title }) => (
 );
 
 StoreAppBar.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 export default StoreAppBar;

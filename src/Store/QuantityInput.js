@@ -76,7 +76,7 @@ class QuantityInput extends Component {
 
 QuantityInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  onChange: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(QuantityInput);

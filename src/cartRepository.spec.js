@@ -1,14 +1,20 @@
-import repository from './cartRepository';
 import idb from 'idb-keyval';
 
+let repository;
 describe('#add', () => {
-  it('stores the product', async () => {
+  beforeEach(() => {
+    repository = require('./cartRepository').default;
+    jest.mock('uuid/v4');
     idb.set = jest.fn();
     idb.get = jest.fn();
+    require('uuid/v4').mockReturnValue('generated-id');
+  });
 
-    const product = { id: 'id' };
+  it('stores the product', async () => {
+    const product = { product: { id: 'id' } };
+    const expected = { product: { id: 'id' }, id: 'generated-id' };
     await repository.add(product);
-    expect(idb.set).toBeCalledWith('cart', [product]);
+    expect(idb.set).toBeCalledWith('cart', [expected]);
   });
 
   it('merges with previous cart', async () => {
@@ -16,9 +22,12 @@ describe('#add', () => {
     idb.get = jest.fn();
     const previousProduct = { id: 'previous' };
     idb.get.mockResolvedValue([previousProduct]);
-    const product = { id: 'id' };
+    const product = { product: { id: 'id' } };
     await repository.add(product);
-    expect(idb.set).toBeCalledWith('cart', [product, previousProduct]);
+    expect(idb.set).toBeCalledWith('cart', [
+      { ...product, ...{ id: 'generated-id' } },
+      previousProduct,
+    ]);
   });
 });
 
