@@ -81,14 +81,14 @@ class Admin extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="secondary">
+        <AppBar position="static" color="primary">
           <Toolbar>
             <Typography
               variant="title"
               color="inherit"
               className={classes.flex}
             >
-              dlç
+              Admin
             </Typography>
             <div>
               <IconButton

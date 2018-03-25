@@ -17,11 +17,13 @@ const styles = {
     textAlign: 'center',
   },
   add: {
-    background: `linear-gradient(45deg, ${green[500]} 30%, ${green[600]} 90%)`,
+    background: `linear-gradient(45deg, ${green[500]} 30%, ${
+      green['A700']
+    } 90%)`,
     color: 'white',
   },
   remove: {
-    background: `linear-gradient(45deg, ${red[500]} 30%, ${red[600]} 90%)`,
+    background: `linear-gradient(45deg, ${red[500]} 30%, ${red['A700']} 90%)`,
     color: 'white',
   },
 };

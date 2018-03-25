@@ -51,7 +51,7 @@ class Cart extends React.Component {
       <div>
         <Button
           variant="fab"
-          color="secondary"
+          color="primary"
           aria-label="add"
           className={classes.addButton}
           onClick={this.handleClickOpen}

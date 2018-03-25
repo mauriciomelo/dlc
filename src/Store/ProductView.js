@@ -98,7 +98,9 @@ class ProductView extends Component {
             Total: ${this.total}
           </Typography>
           <div className={classes.actions}>
-            <Button onClick={this.close}>Cancel</Button>
+            <Button onClick={this.close} color="primary">
+              Cancel
+            </Button>
             <Button onClick={this.addProduct} variant="raised" color="primary">
               Add to cart
             </Button>

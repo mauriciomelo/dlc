@@ -50,7 +50,7 @@ class Store extends React.Component {
         </Switch>
         {this.state.isLoading ? (
           <div className={classes.spinnerWrapper}>
-            <CircularProgress className={classes.spinner} color="secondary" />
+            <CircularProgress className={classes.spinner} color="primary" />
           </div>
         ) : null}
       </div>

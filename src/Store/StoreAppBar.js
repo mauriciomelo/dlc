@@ -5,7 +5,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 const StoreAppBar = ({ title }) => (
-  <AppBar position="static" color="secondary">
+  <AppBar position="static" color="primary">
     <Toolbar>
       <Typography variant="title" color="inherit">
         {title}
