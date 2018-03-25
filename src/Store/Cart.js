@@ -8,7 +8,10 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+
 import ShoppingCartIcon from 'material-ui-icons/ShoppingCart';
+import cart from '../cartRepository';
 
 const styles = {
   addButton: {
@@ -22,7 +25,12 @@ const styles = {
 class Cart extends React.Component {
   state = {
     open: false,
+    cart: [],
   };
+
+  async componentWillMount() {
+    this.setState({ cart: await cart.all() });
+  }
 
   handleRequest = () => {
     this.props.onRequest();
@@ -57,7 +65,15 @@ class Cart extends React.Component {
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle id="responsive-dialog-title">My Cart</DialogTitle>
-          <DialogContent>My cart content</DialogContent>
+          <DialogContent>
+            <List>
+              {this.state.cart.map(item => (
+                <ListItem key={item.id}>
+                  <ListItemText>{item.title}</ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel

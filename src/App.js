@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Reboot from 'material-ui/Reboot';
+import CssBaseline from 'material-ui/CssBaseline';
 import { Main } from './Main';
 import './App.css';
 
@@ -16,8 +16,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Reboot />
-
+        <CssBaseline />
         <Main />
       </div>
     );
