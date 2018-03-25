@@ -6,23 +6,65 @@ import Button from 'material-ui/Button';
 import { Redirect } from 'react-router-dom';
 import cart from '../cartRepository';
 import path from 'path';
+import StoreAppBar from './StoreAppBar';
+import QuantityInput from './QuantityInput';
+import Divider from 'material-ui/Divider';
 
 const styles = {
-  root: {},
+  root: {
+    flex: 1,
+  },
+  content: {
+    padding: '20px',
+  },
+  quantityWrapper: {
+    display: 'flex',
+    margin: '3em 0',
+    alignItems: 'center',
+  },
+  unitPrice: {
+    flex: 1,
+  },
+  quantity: {
+    flex: 1,
+  },
+  totalPrice: {
+    float: 'right',
+    marginTop: '1em',
+    fontSize: '1.5em',
+  },
+  actions: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    padding: '20px',
+    width: '100%',
+    textAlign: 'right',
+  },
 };
 
 class ProductView extends Component {
-  state = { redirect: false };
+  state = { redirect: false, quantity: 1 };
 
   addProduct = async () => {
-    await cart.add(this.product);
-    this.setState({ redirect: true });
+    await cart.add({ ...this.product, ...{ quantity: this.state.quantity } });
+    this.close();
   };
+
+  close = () => this.setState({ redirect: true });
 
   get product() {
     return this.props.store.menu.find(
       p => p.id === this.props.match.params.productId
     );
+  }
+
+  handleQuantity = quantity => {
+    this.setState({ quantity });
+  };
+
+  get total() {
+    return this.product.price * this.state.quantity;
   }
 
   render() {
@@ -36,14 +78,32 @@ class ProductView extends Component {
 
     return (
       <div className={classes.root}>
-        <Typography variant="headline" component="h2">
-          {this.product.title}
-        </Typography>
-        <Typography component="p">{this.product.description}</Typography>
+        <StoreAppBar title={this.product.title} />
+        <div className={classes.content}>
+          <Typography component="p">{this.product.description}</Typography>
 
-        <Button onClick={this.addProduct} variant="raised" color="primary">
-          Add to cart
-        </Button>
+          <div className={classes.quantityWrapper}>
+            <Typography className={classes.unitPrice}>
+              Price per unit: ${this.product.price}
+            </Typography>
+            <QuantityInput
+              className={classes.quantity}
+              onChange={this.handleQuantity}
+            />
+          </div>
+
+          <Divider />
+
+          <Typography className={classes.totalPrice}>
+            Total: ${this.total}
+          </Typography>
+          <div className={classes.actions}>
+            <Button onClick={this.close}>Cancel</Button>
+            <Button onClick={this.addProduct} variant="raised" color="primary">
+              Add to cart
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }

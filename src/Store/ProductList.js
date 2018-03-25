@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import service from '../dbService';
 import Menu from '../Menu';
 import Cart from './Cart';
-
+import StoreAppBar from './StoreAppBar';
 const styles = {
   root: {
     flexGrow: 1,
@@ -23,14 +20,7 @@ class ProductList extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="secondary">
-          <Toolbar>
-            <Typography variant="title" color="inherit">
-              dlç
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
+        <StoreAppBar title={this.props.store.name} />
         <Menu
           menu={this.props.store.menu}
           linkTo={id => `${this.props.match.url}/product/${id}`}
