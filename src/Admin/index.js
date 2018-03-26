@@ -9,6 +9,7 @@ import Visibility from 'material-ui-icons/Visibility';
 import Typography from 'material-ui/Typography';
 import service from '../dbService';
 import ItemForm from './ItemForm';
+import UserRequestDialog from './UserRequestDialog';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import StoreMenu from '../Menu';
 const styles = {
@@ -41,12 +42,6 @@ class Admin extends Component {
     const store = await service.getLocalMenu();
     this.setState({ store });
     this.addMenu(store);
-
-    service.clientRequest.subscribe(msg => {
-      if (msg === 'buy-request') {
-        alert('Someone wants to buy!');
-      }
-    });
   }
 
   async addMenu(store) {
@@ -133,6 +128,7 @@ class Admin extends Component {
         </AppBar>
         <ItemForm onCreate={this.handleSubmit} />
         <StoreMenu menu={this.state.store.menu} />
+        <UserRequestDialog />
       </div>
     );
   }

@@ -23,7 +23,7 @@ class Cart extends React.Component {
   }
 
   handleRequest = () => {
-    service.requestToBuy(this.props.store.publicKey);
+    service.requestToBuy(this.props.store.publicKey, this.state.cart);
   };
 
   handleClose = () => {

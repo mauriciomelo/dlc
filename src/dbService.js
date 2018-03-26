@@ -42,9 +42,7 @@ node.once('ready', () => {
     const key = new NodeRSA(await idb.get('private-key'));
     try {
       const decryptedMessage = key.decrypt(message.data).toString();
-      if (decryptedMessage === 'buy-request') {
-        clientRequest.next(decryptedMessage);
-      }
+      clientRequest.next(JSON.parse(decryptedMessage));
     } catch (e) {
       console.info('Ignored message'); // eslint-disable-line no-console
     }
@@ -85,9 +83,9 @@ createInitialStore();
 
 const clientRequest = new Subject();
 
-const requestToBuy = publicKey => {
+const requestToBuy = (publicKey, cart) => {
   const storeKey = new NodeRSA(publicKey);
-  const message = storeKey.encrypt('buy-request');
+  const message = storeKey.encrypt(JSON.stringify(cart));
   room.broadcast(message);
 };
 
